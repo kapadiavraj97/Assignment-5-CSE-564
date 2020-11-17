@@ -2,13 +2,15 @@ import javax.swing.*;
 
 public class Main extends JFrame {
     public Main(){
-        Canvas canvas = new Canvas();
+        Controller controller = new Controller();
         JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.add(canvas.getFile());
-        jMenuBar.add(canvas.getProject());
-        jMenuBar.add(canvas.getAbout());
+        JDialog aboutDialog = new JDialog(this,"dialog box");
+        JLabel l = new JLabel("About team");
+        jMenuBar.add(controller.canvas.getFile());
+        jMenuBar.add(controller.canvas.getProject());
+        jMenuBar.add(controller.canvas.getAbout());
         setJMenuBar(jMenuBar);
-        add(canvas);
+        add(controller.canvas);
         setSize(400,400);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

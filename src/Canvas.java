@@ -1,8 +1,12 @@
 import javax.swing.*;
 
 public class Canvas extends JPanel {
-    public JMenu file;
-    public JMenu project;
+    JMenu file;
+    JMenu project;
+    JDialog dialog;
+    public JMenu about;
+    JMenuItem open, save, newProject, runProject, stopProject, aboutMenu;
+    JLabel l = new JLabel("This project is developed by Vraj, Aihaab and Deepti.");
 
     public JMenu getFile() {
         return file;
@@ -16,8 +20,6 @@ public class Canvas extends JPanel {
         return about;
     }
 
-    public JMenu about;
-    JMenuItem open, save, newProject, runProject, stopProject, aboutMenu;
     public Canvas(){
         file= new JMenu("File");
         project= new JMenu("Project");
@@ -28,6 +30,9 @@ public class Canvas extends JPanel {
         runProject = new JMenuItem("Run");
         stopProject = new JMenuItem("Stop");
         aboutMenu = new JMenuItem("About");
+        dialog= new JDialog();
+        dialog.setBounds(132, 132, 350, 300);
+        dialog.add(l);
         file.add(open);
         file.add(save);
         project.add(newProject);

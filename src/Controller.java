@@ -13,5 +13,6 @@ public class Controller implements ActionListener {
         if(e.getSource()==canvas.aboutMenu){
             canvas.dialog.setVisible(true);
         }
+
     }
 }

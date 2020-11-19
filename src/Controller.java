@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,6 +17,7 @@ public class Controller implements ActionListener {
         canvas = new Canvas();
         canvas.aboutMenu.addActionListener(this);
         canvas.open.addActionListener(this);
+        canvas.save.addActionListener(this);
         frame = new JFrame();
     }
 
@@ -33,6 +33,10 @@ public class Controller implements ActionListener {
             y_scale(y);
             Repository.createInstance().addCoordinates(x_normalised,y_normalised);
             canvas.repaint();
+        }
+        else if(e.getSource()==canvas.save){
+            createFile();
+            saveFile(Repository.createInstance().getX_coordinates(), Repository.createInstance().getY_coordinates());
         }
     }
 
@@ -108,5 +112,30 @@ public class Controller implements ActionListener {
             maxScore = Math.max(maxScore, score);
         }
         return maxScore;
+    }
+
+    public void createFile(){
+        try {
+            File myObj = new File("filename.txt");
+            myObj.createNewFile();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void saveFile(List<Integer> x, List<Integer> y){
+        try {
+            FileWriter myWriter = new FileWriter("filename.txt");
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("filename.txt"));
+            for(int i=0;i<x.size();i++){
+                myWriter.write(i+"  " + x.get(i) + "  " + y.get(i) );
+                myWriter.write(System.getProperty( "line.separator" ));
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }

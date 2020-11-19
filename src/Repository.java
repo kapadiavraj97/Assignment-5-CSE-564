@@ -3,8 +3,18 @@ import java.util.List;
 import java.util.Observable;
 
 public class Repository extends Observable {
-    private List<Integer> x_coordinates = new ArrayList<>();
-    private List<Integer> y_coordinates = new ArrayList<>();
+    private static Repository repository;
+    static private List<Integer> x_coordinates = new ArrayList<>();
+    static private List<Integer> y_coordinates = new ArrayList<>();
+
+    private Repository(){ }
+
+    public static Repository createInstance(){
+        if(repository==null){
+            repository = new Repository();
+        }
+            return repository;
+    }
 
     public List<Integer> getX_coordinates() {
         return x_coordinates;

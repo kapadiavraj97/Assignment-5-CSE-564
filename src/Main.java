@@ -11,7 +11,7 @@ public class Main extends JFrame {
         jMenuBar.add(controller.canvas.getAbout());
         setJMenuBar(jMenuBar);
         add(controller.canvas);
-        setSize(400,400);
+        setSize(1200,1000);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

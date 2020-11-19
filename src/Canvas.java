@@ -1,12 +1,18 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import java.util.Vector;
 
-public class Canvas extends JPanel {
+public class Canvas extends JPanel implements MouseListener {
+    Vector v = new Vector();
     JMenu file;
     JMenu project;
     JDialog dialog;
     public JMenu about;
     JMenuItem open, save, newProject, runProject, stopProject, aboutMenu;
-    JLabel l = new JLabel("This project is developed by Vraj, Aihaab and Deepti.");
+    JLabel l = new JLabel("About Us: This project is developed by Vraj, Aihaab and Deepti.");
 
     public JMenu getFile() {
         return file;
@@ -40,5 +46,48 @@ public class Canvas extends JPanel {
         project.add(stopProject);
         about.add(aboutMenu);
         add(file);
+        addMouseListener(this);
+    }
+
+    public void paint(Graphics g) {
+        super.paint(g);
+        int width = getWidth();
+        g.setColor(Color.BLUE);
+        List<Integer> x = Repository.createInstance().getX_coordinates();
+        List<Integer> y = Repository.createInstance().getY_coordinates();
+        for(int i=0;i<x.size();i++) {
+            int xCoordinate = x.get(i);
+            int yCoordinate = y.get(i);
+            g.drawOval(xCoordinate, yCoordinate, 10, 10);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        Repository.createInstance().getX_coordinates().add(x);
+        Repository.createInstance().getY_coordinates().add(y);
+        repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

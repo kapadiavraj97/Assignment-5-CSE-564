@@ -1,9 +1,13 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Line2D;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class Canvas extends JPanel implements MouseListener {
     Vector v = new Vector();
@@ -11,6 +15,7 @@ public class Canvas extends JPanel implements MouseListener {
     JMenu project;
     JDialog dialog;
     public JMenu about;
+    Route route;
     JMenuItem open, save, newProject, runProject, stopProject, aboutMenu;
     JLabel l = new JLabel("About Us: This project is developed by Vraj, Aihaab and Deepti.");
 
@@ -50,7 +55,7 @@ public class Canvas extends JPanel implements MouseListener {
     }
 
     public void paint(Graphics g) {
-        super.paint(g);
+        super.paintComponent(g);
         int width = getWidth();
         g.setColor(Color.BLUE);
         List<Integer> x = Repository.createInstance().getX_coordinates();
@@ -58,8 +63,48 @@ public class Canvas extends JPanel implements MouseListener {
         for(int i=0;i<x.size();i++) {
             int xCoordinate = x.get(i);
             int yCoordinate = y.get(i);
-            g.drawOval(xCoordinate, yCoordinate, 10, 10);
+            g.drawOval(xCoordinate, yCoordinate, 5, 5);
         }
+    }
+    
+    public void drawlines(Graphics g, Route route) throws InterruptedException {
+    	Graphics2D g2 = (Graphics2D) g;
+    	g.setColor(Color.RED);
+        for (int i = 0; i+1 <= route.cities.size()-1; i++) {
+            int x1 = route.cities.get(i).getX();
+            int y1 = route.cities.get(i).getY();
+            int x2 = route.cities.get(i+1).getX();
+            int y2 = route.cities.get(i+1).getY();
+            TimeUnit.SECONDS.sleep(1);
+            g2.draw(new Line2D.Double(x1,y1, x2, y2));
+        }
+        
+    }
+    public void drawlines2(Graphics g, Route route) throws InterruptedException {
+    	Graphics2D g2 = (Graphics2D) g;
+    	g.setColor(Color.PINK);
+        for (int i = 0; i+1 <= route.cities.size()-1; i++) {
+            int x1 = route.cities.get(i).getX();
+            int y1 = route.cities.get(i).getY();
+            int x2 = route.cities.get(i+1).getX();
+            int y2 = route.cities.get(i+1).getY();
+            TimeUnit.SECONDS.sleep(1);
+            g2.draw(new Line2D.Double(x1,y1, x2, y2));
+        }
+        
+    }
+    public void drawlines3(Graphics g, Route route) throws InterruptedException {
+    	Graphics2D g2 = (Graphics2D) g;
+    	g.setColor(Color.GRAY);
+        for (int i = 0; i+1 <= route.cities.size()-1; i++) {
+            int x1 = route.cities.get(i).getX();
+            int y1 = route.cities.get(i).getY();
+            int x2 = route.cities.get(i+1).getX();
+            int y2 = route.cities.get(i+1).getY();
+            TimeUnit.SECONDS.sleep(1);
+            g2.draw(new Line2D.Double(x1,y1, x2, y2));
+        }
+        
     }
 
     @Override

@@ -1,10 +1,17 @@
 import javax.swing.*;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Controller implements ActionListener {
     Canvas canvas;
@@ -18,6 +25,7 @@ public class Controller implements ActionListener {
         canvas.aboutMenu.addActionListener(this);
         canvas.open.addActionListener(this);
         canvas.save.addActionListener(this);
+        canvas.runProject.addActionListener(this);
         frame = new JFrame();
     }
 
@@ -37,6 +45,34 @@ public class Controller implements ActionListener {
         else if(e.getSource()==canvas.save){
             createFile();
             saveFile(Repository.createInstance().getX_coordinates(), Repository.createInstance().getY_coordinates());
+        }
+        else if(e.getSource()==canvas.runProject){
+        	LinkedList<City> cities = new LinkedList<City>();
+        	LinkedList<City> cities2 = new LinkedList<City>();
+        	LinkedList<City> cities3 = new LinkedList<City>();
+    		for(int i=0;i<x_normalised.size();i++) {
+                int xCoordinate = x_normalised.get(i);
+                int yCoordinate = y_normalised.get(i);
+                cities.add(new City(xCoordinate,yCoordinate));
+            }
+    		cities2 = cities;
+    		cities3 = cities;
+    		NearestNeighbour nn = new NearestNeighbour();
+        	Route route1 = new Route(cities);
+//        	Route route2 = new Route(cities);
+//        	Route route3 = new Route(cities);
+        	route1 = nn.findShortestRoute(cities,5);
+        	System.out.println(cities2);
+//        	route2 = nn.findShortestRoute(cities,0);
+//        	route3 = nn.findShortestRoute(cities,0);
+        	Graphics g = canvas.getGraphics();
+        	try {
+				canvas.drawlines(g, route1);
+//				canvas.drawlines2(g, route2);
+//				canvas.drawlines3(g, route3);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
         }
     }
 

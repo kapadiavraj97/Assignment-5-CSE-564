@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Controller implements ActionListener, Runnable{
-    Canvas canvas;
+    private Canvas canvas;
     List<Integer> x = new ArrayList<>();
     List<Integer> y = new ArrayList<>();
     List<Integer> x_normalised = new ArrayList<>();
@@ -25,6 +25,10 @@ public class Controller implements ActionListener, Runnable{
         canvas.getNewProject().addActionListener(this);
         canvas.getStopProject().addActionListener(this);
         canvas.t = new Thread(this);
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     @Override

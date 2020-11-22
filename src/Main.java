@@ -6,11 +6,11 @@ public class Main extends JFrame {
         JMenuBar jMenuBar = new JMenuBar();
         JDialog aboutDialog = new JDialog(this,"dialog box");
         JLabel l = new JLabel("About team");
-        jMenuBar.add(controller.canvas.getFile());
-        jMenuBar.add(controller.canvas.getProject());
-        jMenuBar.add(controller.canvas.getAbout());
+        jMenuBar.add(controller.getCanvas().getFile());
+        jMenuBar.add(controller.getCanvas().getProject());
+        jMenuBar.add(controller.getCanvas().getAbout());
         setJMenuBar(jMenuBar);
-        add(controller.canvas);
+        add(controller.getCanvas());
         setSize(1200,1000);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

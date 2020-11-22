@@ -1,78 +1,70 @@
 import javax.swing.*;
-
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
-public class Controller implements ActionListener {
+public class Controller implements ActionListener, Runnable{
     Canvas canvas;
-    JFrame frame;
     List<Integer> x = new ArrayList<>();
     List<Integer> y = new ArrayList<>();
     List<Integer> x_normalised = new ArrayList<>();
     List<Integer> y_normalised = new ArrayList<>();
+    TSPCalculation tspCalculation;
     public Controller(){
         canvas = new Canvas();
-        canvas.aboutMenu.addActionListener(this);
-        canvas.open.addActionListener(this);
-        canvas.save.addActionListener(this);
-        canvas.runProject.addActionListener(this);
-        frame = new JFrame();
+        tspCalculation = new TSPCalculation();
+        canvas.getAboutMenu().addActionListener(this);
+        canvas.getOpen().addActionListener(this);
+        canvas.getSave().addActionListener(this);
+        canvas.getRunProject().addActionListener(this);
+        canvas.getNewProject().addActionListener(this);
+        canvas.getStopProject().addActionListener(this);
+        canvas.t = new Thread(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==canvas.aboutMenu){
-           canvas.dialog.setVisible(true);
+        if(e.getSource()==canvas.getAboutMenu()){
+            canvas.getDialog().setVisible(true);
         }
-        else if(e.getSource()==canvas.open){
-           String filename = chooseFile();
+        else if(e.getSource()==canvas.getOpen()){
+            String filename = chooseFile();
             readFile(filename);
             x_scale(x);
             y_scale(y);
             Repository.createInstance().addCoordinates(x_normalised,y_normalised);
             canvas.repaint();
         }
-        else if(e.getSource()==canvas.save){
-            createFile();
-            saveFile(Repository.createInstance().getX_coordinates(), Repository.createInstance().getY_coordinates());
+        else if(e.getSource()==canvas.getSave()){
+            //createFile();
+            String filename = chooseFile();
+            saveFile(Repository.createInstance().getX_coordinates(), Repository.createInstance().getY_coordinates(),filename);
         }
-        else if(e.getSource()==canvas.runProject){
-        	LinkedList<City> cities = new LinkedList<City>();
-        	LinkedList<City> cities2 = new LinkedList<City>();
-        	LinkedList<City> cities3 = new LinkedList<City>();
-    		for(int i=0;i<x_normalised.size();i++) {
-                int xCoordinate = x_normalised.get(i);
-                int yCoordinate = y_normalised.get(i);
-                cities.add(new City(xCoordinate,yCoordinate));
+        else if(e.getSource()==canvas.getRunProject()){
+            tspCalculation.tsp(tspCalculation.distanceCalculation(Repository.createInstance().getX_coordinates(),Repository.createInstance().getY_coordinates()));
+            Repository.createInstance().setRoute1(tspCalculation.getRouteNodes().get(tspCalculation.getCost().get(0).get(1)));
+            Repository.createInstance().setRoute2(tspCalculation.getRouteNodes().get(tspCalculation.getCost().get(1).get(1)));
+            Repository.createInstance().setRoute3(tspCalculation.getRouteNodes().get(tspCalculation.getCost().get(2).get(1)));
+            if(canvas.t.isAlive()){
+                canvas.t.resume();
             }
-    		cities2 = cities;
-    		cities3 = cities;
-    		NearestNeighbour nn = new NearestNeighbour();
-        	Route route1 = new Route(cities);
-//        	Route route2 = new Route(cities);
-//        	Route route3 = new Route(cities);
-        	route1 = nn.findShortestRoute(cities,5);
-        	System.out.println(cities2);
-//        	route2 = nn.findShortestRoute(cities,0);
-//        	route3 = nn.findShortestRoute(cities,0);
-        	Graphics g = canvas.getGraphics();
-        	try {
-				canvas.drawlines(g, route1);
-//				canvas.drawlines2(g, route2);
-//				canvas.drawlines3(g, route3);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+            else{
+                canvas.t.start();
+            }
+        }
+        else if(e.getSource()==canvas.getNewProject()){
+            Repository.createInstance().getX_coordinates().clear();
+            Repository.createInstance().getY_coordinates().clear();
+            canvas.t.stop();
+            canvas.repaint();
+        }
+        else if(e.getSource() == canvas.getStopProject()){
+            canvas.t.suspend();
         }
     }
 
@@ -160,10 +152,9 @@ public class Controller implements ActionListener {
         }
     }
 
-    public void saveFile(List<Integer> x, List<Integer> y){
+    public void saveFile(List<Integer> x, List<Integer> y,String filename){
         try {
-            FileWriter myWriter = new FileWriter("filename.txt");
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("filename.txt"));
+            FileWriter myWriter = new FileWriter(filename);
             for(int i=0;i<x.size();i++){
                 myWriter.write(i+"  " + x.get(i) + "  " + y.get(i) );
                 myWriter.write(System.getProperty( "line.separator" ));
@@ -173,5 +164,38 @@ public class Controller implements ActionListener {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+        try{
+            Graphics g1 = canvas.getGraphics();
+            Graphics g2 = canvas.getGraphics();
+            Graphics g3 = canvas.getGraphics();
+            g1.setColor(Color.red);
+            g2.setColor(Color.blue);
+            g3.setColor(Color.green);
+            for (int i = 0; i < Repository.getRoute1().size() - 1; i++) {
+                int x1 = Repository.createInstance().getX_coordinates().get(Repository.getRoute1().get(i));
+                int y1 = Repository.createInstance().getY_coordinates().get(Repository.getRoute1().get(i));
+                int x2 = Repository.createInstance().getX_coordinates().get(Repository.getRoute1().get(i + 1));
+                int y2 = Repository.createInstance().getY_coordinates().get(Repository.getRoute1().get(i + 1));
+                int x3 = Repository.createInstance().getX_coordinates().get(Repository.getRoute2().get(i));
+                int y3 = Repository.createInstance().getY_coordinates().get(Repository.getRoute2().get(i));
+                int x4 = Repository.createInstance().getX_coordinates().get(Repository.getRoute2().get(i + 1));
+                int y4 = Repository.createInstance().getY_coordinates().get(Repository.getRoute2().get(i + 1));
+                int x5 = Repository.createInstance().getX_coordinates().get(Repository.getRoute3().get(i));
+                int y5 = Repository.createInstance().getY_coordinates().get(Repository.getRoute3().get(i));
+                int x6 = Repository.createInstance().getX_coordinates().get(Repository.getRoute3().get(i + 1));
+                int y6 = Repository.createInstance().getY_coordinates().get(Repository.getRoute3().get(i + 1));
+                g1.drawLine(x1, y1, x2, y2);
+                g2.drawLine(x3, y3, x4, y4);
+                g3.drawLine(x5,y5,x6,y6);
+                canvas.t.sleep(1000);
+            }
+            canvas.flag = true;
+            canvas.repaint();
+        }catch (Exception e){}
+
     }
 }

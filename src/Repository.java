@@ -6,6 +6,33 @@ public class Repository extends Observable {
     private static Repository repository;
     static private List<Integer> x_coordinates = new ArrayList<>();
     static private List<Integer> y_coordinates = new ArrayList<>();
+    static private List<Integer> route1 = new ArrayList<>();
+    static private List<Integer> route2 = new ArrayList<>();
+    static private List<Integer> route3 = new ArrayList<>();
+
+    public static void setRoute1(List<Integer> route1) {
+        Repository.route1 = route1;
+    }
+
+    public static void setRoute2(List<Integer> route2) {
+        Repository.route2 = route2;
+    }
+
+    public static void setRoute3(List<Integer> route3) {
+        Repository.route3 = route3;
+    }
+
+    public static List<Integer> getRoute1() {
+        return route1;
+    }
+
+    public static List<Integer> getRoute2() {
+        return route2;
+    }
+
+    public static List<Integer> getRoute3() {
+        return route3;
+    }
 
     private Repository(){ }
 
@@ -13,7 +40,7 @@ public class Repository extends Observable {
         if(repository==null){
             repository = new Repository();
         }
-            return repository;
+        return repository;
     }
 
     public List<Integer> getX_coordinates() {
@@ -39,3 +66,4 @@ public class Repository extends Observable {
     }
 
 }
+

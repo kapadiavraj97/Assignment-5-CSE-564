@@ -45,7 +45,6 @@ public class Controller implements ActionListener, Runnable{
             canvas.repaint();
         }
         else if(e.getSource()==canvas.getSave()){
-            //createFile();
             String filename = chooseFile();
             saveFile(Repository.createInstance().getX_coordinates(), Repository.createInstance().getY_coordinates(),filename);
         }
